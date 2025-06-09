@@ -1,0 +1,759 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ImportKicks - Zapatillas para Hombres</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --color-primary: #4f46e5;
+            --color-primary-dark: #4338ca;
+            --color-primary-light: #818cf8;
+            --color-gray-50: #f9fafb;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+            --color-gray-400: #9ca3af;
+            --color-gray-500: #6b7280;
+            --color-gray-600: #4b5563;
+            --color-gray-700: #374151;
+            --color-gray-800: #1f2937;
+            --color-gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            color: var(--color-gray-800);
+            background-color: var(--color-gray-50);
+
+            /* Aquí agrego para que footer quede abajo */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex-grow: 1; /* Para que main crezca y empuje el footer hacia abajo */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--color-gray-900);
+        }
+
+        .logo-icon {
+            color: var(--color-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-gray-600);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--color-primary);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: var(--color-gray-600);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Page Title */
+        .page-title {
+            margin-top: 6rem;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-gray-900);
+            padding-bottom: 2rem;
+        }
+
+        /* Products grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Móviles: 2 columnas */
+            gap: 1.5rem;
+            padding-bottom: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Tablets: 3 columnas */
+        @media(min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* PC grandes: 4 columnas */
+        @media(min-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            position: relative;
+            height: 180px; /* Ajuste para móviles */
+            overflow: hidden;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Imagen crece un poco al hacer hover */
+        .product-image img {
+            max-width: 90%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.7s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 0.75rem 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .product-info h3 {
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            color: var(--color-gray-900);
+            font-size: 1rem;
+            min-height: 2.4em; /* Para que tengan igual altura */
+        }
+
+        .price {
+            font-weight: 700;
+            color: var(--color-gray-900);
+            font-size: 1.1rem;
+        }
+
+        .price .old-price {
+            color: #888;
+            text-decoration: line-through;
+            font-weight: 400;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: var(--color-gray-900);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        /* Responsive menu toggle for mobile */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+        }
+
+        .whatsapp-float {
+                        position: fixed;
+                        right: 32px;
+                        bottom: 32px;
+                        z-index: 2000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 64px;
+                        height: 64px;
+                        border-radius: 50%;
+                        box-shadow: 0 4px 16px rgba(37,211,102,0.25), 0 1.5px 4px rgba(0,0,0,0.10);
+                        background: #25D366;
+                        transition: box-shadow 0.2s, filter 0.2s;
+                        border: 3px solid #fff;
+                    }
+                    .whatsapp-float:hover {
+                        box-shadow: 0 8px 24px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.15);
+                        filter: brightness(1.08);
+                    }
+                    .whatsapp-float img {
+                        width: 48px;
+                        height: 48px;
+                        display: block;
+                    }
+                    @media (max-width: 600px) {
+                        .whatsapp-float {
+                            right: 16px;
+                            bottom: 16px;
+                            width: 56px;
+                            height: 56px;
+                        }
+                        .whatsapp-float img {
+                            width: 40px;
+                            height: 40px;
+                        }
+          
+              }
+
+              .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .pagination {
+            display: flex;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.2rem;
+            overflow: hidden;
+            background: #fff;
+        }
+        .pagination .page {
+            background: #fff;
+            color: #111827;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 500;
+            border-right: 1px solid #e5e7eb;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        .pagination .page:last-child {
+            border-right: none;
+        }
+        .pagination .page.current,
+        .pagination .page:hover {
+            background: #000;
+            color: #fff;
+            font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .pagination .page {
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+            .pagination-wrapper {
+                margin: 1.2rem 0;
+            }
+        }
+        @media (max-width: 400px) {
+            .pagination .page {
+                width: 30px;
+                height: 30px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span>ImportKicks</span>
+                </div>
+                
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="hombre.html" class="active">Hombres</a></li>
+                    <li><a href="niños.html">Niños</a></li>
+                    <li><a href="mujer.html">Mujeres</a></li>
+                    <li><a href="nuevos.html">Nuevos Modelos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="page-title">Zapatillas para Mujeres</h1>
+
+        <section class="products-grid">
+            <!-- Producto 1 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/1.png" alt="Air Jordan 3 Retro Tex" />
+                </div>
+                <div class="product-info">
+                    <h3>RunFalcon 3 Lace Shoes</h3>
+                    <div class="price">
+                        <span class="old-price">S/230.00</span>
+                        <span><strong>S/185.00</strong></span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Producto 2 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/2.png" alt="Air Jordan 11 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Court Vision Alta</h3>
+                    <div class="price">
+                        <span class="old-price">S/390.00</span>
+                        <span><strong>S/315.00</strong></span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Producto 3 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/3.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Dunk Low</h3>
+                    <div class="price">
+                        <span class="old-price">S/620.00</span>
+                        <span><strong>S/480.00</strong></span>
+                    </div>
+                 </article>
+
+            <!-- Producto 4 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/4.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Flex Experience Run 11 Next Nature</h3>
+                    <div class="price">
+                        <span class="old-price">S/299.00</span>
+                        <span><strong>S/220.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 5 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/5.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Metcon 9</h3>
+                    <div class="price">
+                        <span class="old-price">S/630.00</span>
+                        <span><strong>S/510.00</strong></span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Producto 6 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/6.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Metcon 9</h3>
+                    <div class="price">
+                        <span class="old-price">S/630.00</span>
+                        <span><strong>S/430.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 7 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/7.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Pegasus 40</h3>
+                    <div class="price">
+                        <span class="old-price">S/600.00</span>
+                        <span><strong>S/460.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 8 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/8.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Phoenix Waffle</h3>
+                    <div class="price">
+                        <span class="old-price">S/460.00</span>
+                        <span><strong>S/360.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 9 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/9.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Tech Hera</h3>
+                    <div class="price">
+                        <span class="old-price">S/510.00</span>
+                        <span><strong>S/417.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 10 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/10.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Tech Hera</h3>
+                    <div class="price">
+                        <span class="old-price">S/510.00</span>
+                        <span><strong>S/390.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 11 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/11.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Versair</h3>
+                    <div class="price">
+                        <span class="old-price">S/590.00</span>
+                        <span><strong>S/490.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 12 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/12.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Versair</h3>
+                    <div class="price">
+                        <span class="old-price">S/599.00</span>
+                        <span><strong>S/430.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 13 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/13.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Racer TR23</h3>
+                    <div class="price">
+                        <span class="old-price">S/329.00</span>
+                        <span><strong>S/275.00</strong></span>
+                    </div>
+            </article>
+
+            <!-- Producto 14 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/14.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>RAND COURT 2.0 EL K</h3>
+                    <div class="price">
+                        <span class="old-price">S/225.00</span>
+                        <span><strong>S/200.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 15 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/15.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Tenis adidas Court Plataforma</h3>
+                    <div class="price">
+                        <span class="old-price">S/260.00</span>
+                        <span><strong>S/222.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 16 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/16.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Tenis adidas Court Silk</h3>
+                    <div class="price">
+                        <span class="old-price">S/280.00</span>
+                        <span><strong>S/241.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 17 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/17.png" alt="Air Jordan 13 Retro" />
+                </div>
+            <div class="product-info">
+                <h3>Zapatilla Breaknet Sleek</h3>
+                <div class="price">
+                    <span class="old-price">S/240.00</span>
+                    <span><strong>S/205.00</strong></span>
+                </div>
+            </article>
+
+             <!-- Producto 18 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/18.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Zapatilla Breaknet Sleek</h3>
+                    <div class="price">
+                        <span class="old-price">S/240.00</span>
+                        <span><strong>S/205.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 19 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/19.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Zapatilla Breaknet Sleek</h3>
+                    <div class="price">
+                        <span class="old-price">S/230.00</span>
+                        <span><strong>S/200.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 20 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/20.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Zapatilla Courtflash Tennis</h3>
+                    <div class="price">
+                        <span class="old-price">S/220.00</span>
+                        <span><strong>S/190.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 21 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/21.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Zapatillas Court Plataforma</h3>
+                    <div class="price">
+                        <span class="old-price">S/260.00</span>
+                        <span><strong>S/222.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 22 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/22.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Zapatillas adidas Grand Court 2.0</h3>
+                    <div class="price">
+                        <span class="old-price">S/249.00</span>
+                        <span><strong>S/185.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 23 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/23.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Zapatillas Advantage 2.0</h3>
+                    <div class="price">
+                        <span class="old-price">S/260.00</span>
+                        <span><strong>S/222.00</strong></span>
+                    </div>
+            </article>
+
+             <!-- Producto 24 -->
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="mujer/tercero/24.png" alt="Air Jordan 13 Retro" />
+                </div>
+                <div class="product-info">
+                    <h3>Nike Metcon 9</h3>
+                    <div class="price">
+                        <span class="old-price">S/629.00</span>
+                        <span><strong>S/499.00</strong></span>
+                    </div>
+            </article>
+
+        </section>
+    </main>
+    <div class="pagination-wrapper">
+        <nav class="pagination" aria-label="Paginación de productos">
+            <a href="mujer.html" class="page current">1</a>
+            <a href="mujer2.html" class="page">2</a>
+            <a href="mujer3.html" class="page">3</a>
+            <a href="mujer4.html" class="page">4</a>
+            <a href="mujer5.html" class="page">5</a>
+            <a href="mujer4.html" class="page next">&#8594;</a>
+        </nav>
+    </div>
+    
+    <footer class="footer">
+        <p>&copy; 2025 ImportKicks. Todos los derechos reservados.</p>
+    </footer>
+
+     <a href="https://wa.me/51986206815?text=Hola%2C%20estoy%20interesado%20en%20las%20zapatillas%20que%20ofreces.%20¿Podrías%20darme%20más%20información%20sobre%20modelos%2C%20precios%20y%20disponibilidad%3F" class="whatsapp-float" target="_blank" aria-label="WhatsApp">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+     </a>
+
+    <script>
+        // Header scroll effect
+        const header = document.querySelector('.header');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
